@@ -38,7 +38,7 @@ public class TodoControllerTest {
     private ArgumentCaptor<Todo> todoArgumentCaptor;
 
     @Test
-    void ShouldAbleToCreateNewTodoTask() throws Exception {
+    void shouldAbleToCreateNewTodoTask() throws Exception {
         Todo todo = new Todo();
         todo.setName("Sam");
         todo.setDescription("Sleeping");
@@ -56,5 +56,7 @@ public class TodoControllerTest {
         assertThat(todoArgumentCaptor.getValue().getDescription(), is("Sleeping"));
 
     }
+
+
 }
 
