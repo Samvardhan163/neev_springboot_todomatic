@@ -14,12 +14,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @WebMvcTest(TodoController.class)
 @ExtendWith(SpringExtension.class)
@@ -57,6 +62,29 @@ public class TodoControllerTest {
 
     }
 
+    @Test
+    void shouldReturnListOfTodoTask() throws Exception {
+        Todo todo = new Todo();
+        todo.setName("Sam");
+        todo.setDescription("Sleeping");
+        todo.setId(1L);
+        Todo todo1 = new Todo();
+        todo1.setName("Sam");
+        todo1.setDescription("");
+        todo1.setId(2L);
+        when(todoService.getAllTodoTask()).thenReturn(List.of(todo, todo1));
 
+        this.mockMvc
+                .perform(get("/api/todo"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name",is("Sam")))
+                .andExpect(jsonPath("$[0].description",is("Sleeping")));
+
+
+
+    }
 }
 
